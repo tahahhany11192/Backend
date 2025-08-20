@@ -22,47 +22,37 @@ const MONGO_URI = process.env.MONGO_URI || '*';
 const app = express();
 const server = http.createServer(app);
 
-// Enhanced CORS configuration
-const allowedOrigins = [
-  'http://127.0.0.1:5501',
-  'http://localhost:5501',
-  'http://127.0.0.1:3000',
-  'http://localhost:3000',
-  'https://backend-pfnoxq.fly.dev',
-  'https://orycom.com'
-  // Add any other domains you need
-];
-
-// Enhanced CORS middleware
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl requests)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
+// Enhanced Socket.IO Configuration
+const io = new Server(server, {
+  cors: {
+    origin: [FRONTEND_ORIGIN, 'http://127.0.0.1:5501'],
+    methods: ["GET", "POST"],
+    credentials: true
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
-
-// Handle preflight requests
-app.options('*', cors());
+  transports: ['polling', 'websocket'],
+  allowEIO3: true,
+  connectionStateRecovery: {
+    maxDisconnectionDuration: 120000
+  },
+  pingTimeout: 60000,
+  pingInterval: 25000
+});
 
 // Middleware
 app.use(helmet({
   crossOriginResourcePolicy: false,
 }));
 
+app.use(cors({
+  origin: [FRONTEND_ORIGIN, 'http://127.0.0.1:5501'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin || FRONTEND_ORIGIN);
+  res.header('Access-Control-Allow-Origin', FRONTEND_ORIGIN);
   res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   next();
 });
 
@@ -92,22 +82,6 @@ mongoose.connect(MONGO_URI, {
 })
 .then(() => console.log('✅ MongoDB connected'))
 .catch(err => console.error('❌ MongoDB connection error:', err));
-
-// Enhanced Socket.IO Configuration
-const io = new Server(server, {
-  cors: {
-    origin: allowedOrigins,
-    methods: ["GET", "POST"],
-    credentials: true
-  },
-  transports: ['polling', 'websocket'],
-  allowEIO3: true,
-  connectionStateRecovery: {
-    maxDisconnectionDuration: 120000
-  },
-  pingTimeout: 60000,
-  pingInterval: 25000
-});
 
 // Enhanced Socket.IO Middleware
 io.use((socket, next) => {
@@ -555,15 +529,6 @@ app.get('/', (req, res) => {
   res.send('Backend is working 🎉');
 });
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'OK', 
-    message: 'Server is running',
-    timestamp: new Date().toISOString()
-  });
-});
-
 // PeerJS Server with enhanced configuration
 const peerServer = ExpressPeerServer(server, {
   debug: true,
@@ -604,18 +569,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({
-    status: 'error',
-    message: 'Endpoint not found'
-  });
-});
-
 // Start Server
-server.listen(PORT,'0.0.0.0' () => {
+server.listen(PORT,'0.0.0.0',() => {
   console.log(`
-    🚀 Server running on http:0.0.0.0:${PORT}
+    🚀 Server running on http://0.0.0.0:${PORT}
     📡 Socket.IO: ws://0.0.0.0:${PORT}/socket.io/
     🎮 PeerJS: http://0.0.0.0:${PORT}/peerjs
     💬 Chat: ws://0.0.0.0:${PORT}
@@ -634,3 +591,7 @@ process.on('SIGTERM', () => {
     });
   });
 });
+
+
+
+
