@@ -576,7 +576,7 @@ server.listen(PORT,'0.0.0.0',() => {
     📡 Socket.IO: ws://0.0.0.0:${PORT}/socket.io/
     🎮 PeerJS: http://0.0.0.0:${PORT}/peerjs
     💬 Chat: ws://0.0.0.0:${PORT}
-    🌐 CORS Origin: ${FRONTEND_ORIGIN}
+    🌐 CORS Origin:  ${FRONTEND_ORIGIN}
     🏫 Active rooms: ${Object.keys(activeRooms).length}
   `);
 });
