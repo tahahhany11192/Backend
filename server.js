@@ -613,12 +613,12 @@ app.use('*', (req, res) => {
 });
 
 // Start Server
-server.listen(PORT, () => {
+server.listen(PORT,'0.0.0.0' () => {
   console.log(`
-    🚀 Server running on http://localhost:${PORT}
-    📡 Socket.IO: ws://localhost:${PORT}/socket.io/
-    🎮 PeerJS: http://localhost:${PORT}/peerjs
-    💬 Chat: ws://localhost:${PORT}
+    🚀 Server running on http:0.0.0.0:${PORT}
+    📡 Socket.IO: ws://0.0.0.0:${PORT}/socket.io/
+    🎮 PeerJS: http://0.0.0.0:${PORT}/peerjs
+    💬 Chat: ws://0.0.0.0:${PORT}
     🌐 CORS Origin: ${FRONTEND_ORIGIN}
     🏫 Active rooms: ${Object.keys(activeRooms).length}
   `);
