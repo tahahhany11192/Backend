@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  redis:
+    image: redis:7
+    restart: always
+    ports:
+      - "6379:6379"
+
+  coturn:
+    image: instrumentisto/coturn
+    restart: always
+    ports:
+      - "3478:3478"       # TURN
+      - "3478:3478/udp"
+      - "5349:5349"       # TLS TLS over 5349
+      - "5349:5349/udp"
+    environment:
+      - REALM=${relay1.expressturn.com:3480}
+      - EXTERNAL_IP=YOUR_SERVER_PUBLIC_IP_OR_DNS
+      - LISTEN_PORT=3478
+      - MIN_PORT=49152
+      - MAX_PORT=65535
+      - USE_AUTH=true
+      - LT_CREDENTIALS_SECRET=${LpmezsxhuljCqCrtsnuvEMyOGnM=}
+    volumes:
+      - ./turn-config:/etc/coturn

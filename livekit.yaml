@@ -1,0 +1,8 @@
+# livekit.yaml
+port: 7880           # HTTP/WebSocket port
+rtc:
+  tcp_port: 7881     # TCP fallback
+  port_range_start: 7882  # UDP ports for media (open these in firewall)
+  port_range_end: 7890
+keys:
+  devkey: 1234567890abcdef1234567890abcdef     # DEVELOPMENT ONLY — replace in prod
