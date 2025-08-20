@@ -14,7 +14,7 @@ const ChatRoom = require('./models/ChatRoom');
 const searchRoutes = require("./routes/searchRoutes");
 
 // Configuration
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 const FRONTEND_ORIGIN = process.env.CORS_ORIGIN || '*';
 const MONGO_URI = process.env.MONGO_URI || '*';
 
