@@ -15,7 +15,7 @@ const searchRoutes = require("./routes/searchRoutes");
 
 // Configuration
 const PORT = process.env.PORT || 8080;
-const FRONTEND_ORIGIN = process.env.CORS_ORIGIN || 'https://tahahhany11192.github.io';
+const FRONTEND_ORIGIN = process.env.CORS_ORIGIN || 'https://www.orycom.com';
 const MONGO_URI = process.env.MONGO_URI || '*';
 
 // Initialize Server
@@ -25,7 +25,7 @@ const server = http.createServer(app);
 // Enhanced Socket.IO Configuration
 const io = new Server(server, {
   cors: {
-    origin: [FRONTEND_ORIGIN, 'https://tahahhany11192.github.io'],
+    origin: [FRONTEND_ORIGIN, 'https://www.orycom.com'],
     methods: ["GET", "POST"],
     credentials: true
   },
@@ -44,7 +44,7 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: [FRONTEND_ORIGIN, 'https://tahahhany11192.github.io'],
+  origin: [FRONTEND_ORIGIN, 'https://www.orycom.com'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
